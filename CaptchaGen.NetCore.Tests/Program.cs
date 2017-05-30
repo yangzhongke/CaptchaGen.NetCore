@@ -7,9 +7,8 @@ namespace CaptchaGen.NetCore.Tests
     {
         static void Main(string[] args)
         {
-            ImageFactory.Distortion = 10;
             using (FileStream fs = File.OpenWrite("d:/1.jpg"))
-            using (Stream picStream = ImageFactory.GenerateImage("AB123", 50, 100, 20))
+            using (Stream picStream = ImageFactory.BuildImage("AB123", 50, 100, 20,10, ImageFormatType.Jpeg))
             {
                 picStream.CopyTo(fs);
             }
