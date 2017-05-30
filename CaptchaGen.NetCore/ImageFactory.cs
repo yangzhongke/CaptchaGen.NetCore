@@ -38,47 +38,47 @@ namespace CaptchaGen.NetCore
         {
             int newX, newY;
             MemoryStream memoryStream = new MemoryStream();
-            Bitmap captchaImage = new Bitmap(imageWidth, imageHeight, System.Drawing.Imaging.PixelFormat.Format64bppArgb);
-            Bitmap cache = new Bitmap(imageWidth, imageHeight, System.Drawing.Imaging.PixelFormat.Format64bppArgb);
-
-
-            Graphics graphicsTextHolder = Graphics.FromImage(captchaImage);
-            graphicsTextHolder.Clear(BackgroundColor);
-            graphicsTextHolder.DrawString(captchaCode, new Font(FONTFAMILY, fontSize, FontStyle.Italic), new SolidBrush(Color.Gray), new PointF(8.4F, 20.4F));
-
-            //Distort the image with a wave function
-            for (int y = 0; y < imageHeight; y++)
+            using (Bitmap captchaImage = new Bitmap(imageWidth, imageHeight, System.Drawing.Imaging.PixelFormat.Format64bppArgb))
+            using (Bitmap cache = new Bitmap(imageWidth, imageHeight, System.Drawing.Imaging.PixelFormat.Format64bppArgb))
+            using (Graphics graphicsTextHolder = Graphics.FromImage(captchaImage))
             {
-                for (int x = 0; x < imageWidth; x++)
+                graphicsTextHolder.Clear(BackgroundColor);
+                graphicsTextHolder.DrawString(captchaCode, new Font(FONTFAMILY, fontSize, FontStyle.Italic), new SolidBrush(Color.Gray), new PointF(8.4F, 20.4F));
+
+                //Distort the image with a wave function
+                for (int y = 0; y < imageHeight; y++)
                 {
-                    newX = (int)(x + (distortion * Math.Sin(Math.PI * y / 64.0)));
-                    newY = (int)(y + (distortion * Math.Cos(Math.PI * x / 64.0)));
-                    if (newX < 0 || newX >= imageWidth) newX = 0;
-                    if (newY < 0 || newY >= imageHeight) newY = 0;
-                    cache.SetPixel(x, y, captchaImage.GetPixel(newX, newY));
+                    for (int x = 0; x < imageWidth; x++)
+                    {
+                        newX = (int)(x + (distortion * Math.Sin(Math.PI * y / 64.0)));
+                        newY = (int)(y + (distortion * Math.Cos(Math.PI * x / 64.0)));
+                        if (newX < 0 || newX >= imageWidth) newX = 0;
+                        if (newY < 0 || newY >= imageHeight) newY = 0;
+                        cache.SetPixel(x, y, captchaImage.GetPixel(newX, newY));
+                    }
                 }
-            }
-            System.Drawing.Imaging.ImageFormat imgFormat;
-            switch(imgType)
-            {
-                case ImageFormatType.Bmp:
-                    imgFormat = System.Drawing.Imaging.ImageFormat.Bmp;
-                    break;
-                case ImageFormatType.Gif:
-                    imgFormat = System.Drawing.Imaging.ImageFormat.Gif;
-                    break;
-                case ImageFormatType.Jpeg:
-                    imgFormat = System.Drawing.Imaging.ImageFormat.Jpeg;
-                    break;
-                case ImageFormatType.Png:
-                    imgFormat = System.Drawing.Imaging.ImageFormat.Png;
-                    break;
-                default:
-                    throw new ArgumentException("unkown image type");
-            }
-            cache.Save(memoryStream, imgFormat);
-            memoryStream.Position = 0;
-            return memoryStream;
+                System.Drawing.Imaging.ImageFormat imgFormat;
+                switch (imgType)
+                {
+                    case ImageFormatType.Bmp:
+                        imgFormat = System.Drawing.Imaging.ImageFormat.Bmp;
+                        break;
+                    case ImageFormatType.Gif:
+                        imgFormat = System.Drawing.Imaging.ImageFormat.Gif;
+                        break;
+                    case ImageFormatType.Jpeg:
+                        imgFormat = System.Drawing.Imaging.ImageFormat.Jpeg;
+                        break;
+                    case ImageFormatType.Png:
+                        imgFormat = System.Drawing.Imaging.ImageFormat.Png;
+                        break;
+                    default:
+                        throw new ArgumentException("unkown image type");
+                }
+                cache.Save(memoryStream, imgFormat);
+                memoryStream.Position = 0;
+                return memoryStream;
+            }            
         }
     }
 }

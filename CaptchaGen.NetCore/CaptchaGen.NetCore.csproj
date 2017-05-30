@@ -22,7 +22,7 @@ Also be careful when using the library cross-platform, to include the runtime.os
 Nuget: CoreCompat.System.Drawing, runtime.osx.10.10-x64.CoreCompat.System.Drawing, and runtime.linux-x64.CoreCompat.System.Drawing</Description>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/yangzhongke/CaptchaGen.NetCore</PackageProjectUrl>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
   </PropertyGroup>
 
   <ItemGroup>
