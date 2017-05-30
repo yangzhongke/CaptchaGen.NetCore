@@ -3,8 +3,9 @@ Captcha generator for .net core
 migration from [CaptchaGen](https://github.com/vishnuprasadv/CaptchaGen) by yangzhongke from [rupeng.com](http://www.rupeng.com)  
 
 Nuget Install:  
->Install-Package CaptchaGen.NetCore
+>Install-Package CaptchaGen.NetCore 
 
+Example Code:  
 ```C#
     ImageFactory.Distortion = 10;
     using (FileStream fs = File.OpenWrite("d:/1.jpg"))
