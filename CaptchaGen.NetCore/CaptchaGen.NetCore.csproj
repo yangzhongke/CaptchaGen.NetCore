@@ -12,13 +12,13 @@ Install-Package CaptchaGen.NetCore
 Example Code:
     string code = ImageFactory.CreateCode(5);
     using (FileStream fs = File.OpenWrite("d:/1.jpg"))
-    using (Stream picStream = ImageFactory.BuildImage(code, 50, 100, 20,10, ImageFormatType.Jpeg))
+    using (Stream picStream = ImageFactory.BuildImage(code, 50, 100, 20,10))
     {
 	picStream.CopyTo(fs);
     }</Description>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/yangzhongke/CaptchaGen.NetCore</PackageProjectUrl>
-    <Version>1.1.0</Version>
+    <Version>1.1.1</Version>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Text;
 
@@ -47,8 +48,7 @@ namespace CaptchaGen.NetCore
         /// <param name="distortion">Distortion required</param>
         /// <returns>Generated jpeg image as a MemoryStream object</returns>
         public static MemoryStream BuildImage(string captchaCode, int imageHeight, int imageWidth,
-            int fontSize, int distortion = 18,
-            ImageFormatType imgType = ImageFormatType.Png)
+            int fontSize, int distortion = 18)
         {
             int newX, newY;
             Random random = new Random();
@@ -86,24 +86,7 @@ namespace CaptchaGen.NetCore
                         cache.SetPixel(x, y, captchaImage.GetPixel(newX, newY));
                     }
                 }
-                System.Drawing.Imaging.ImageFormat imgFormat;
-                switch (imgType)
-                {
-                    case ImageFormatType.Bmp:
-                        imgFormat = System.Drawing.Imaging.ImageFormat.Bmp;
-                        break;
-                    case ImageFormatType.Gif:
-                        imgFormat = System.Drawing.Imaging.ImageFormat.Gif;
-                        break;
-                    case ImageFormatType.Jpeg:
-                        imgFormat = System.Drawing.Imaging.ImageFormat.Jpeg;
-                        break;
-                    case ImageFormatType.Png:
-                        imgFormat = System.Drawing.Imaging.ImageFormat.Png;
-                        break;
-                    default:
-                        throw new ArgumentException("unkown image type");
-                }
+                ImageFormat imgFormat = ImageFormat.Jpeg;
                 cache.Save(memoryStream, imgFormat);
                 memoryStream.Position = 0;
                 return memoryStream;
