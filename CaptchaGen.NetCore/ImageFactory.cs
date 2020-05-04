@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Text;
@@ -8,21 +7,35 @@ namespace CaptchaGen.NetCore
 {
     /// <summary>
     /// Generates a captcha image based on the captcha code string given.
-    /// yangzhongke(http://www.rupeng.com) migrated from https://github.com/vishnuprasadv/CaptchaGen/blob/master/CaptchaGen/ImageFactory.cs
+    /// yangzhongke(http://www.youzack.com) migrated from https://github.com/vishnuprasadv/CaptchaGen/blob/master/CaptchaGen/ImageFactory.cs
     /// </summary>
     public static class ImageFactory
     {
-        const int HEIGHT = 96;
-        const int WIDTH = 150;
         const string FONTFAMILY = "Arial";
-        const int FONTSIZE = 25;
+
+        /// <summary>
+        /// Create a random string that consits of 'digitCount' characters
+        /// </summary>
+        /// <param name="digitCount"></param>
+        /// <returns></returns>
+        public static string CreateCode(int digitCount=5)
+        {
+            char[] chars = {'A','B','C','D','G','H','K','M','N','P','Q','R','S','T','W','X','Y',
+                '3','4','5','6','8'};
+            StringBuilder sb = new StringBuilder();
+            Random random = new Random();
+            for (int i=0;i< digitCount;i++)
+            {
+                sb.Append(chars[random.Next(chars.Length)]);
+            }
+            return sb.ToString();
+        }
 
         /// <summary>
         /// Background color to be used.
         /// Default value = Color.Wheat
         /// </summary>
         public static Color BackgroundColor { get; set; } = Color.Wheat;
-        
 
         /// <summary>
         /// Actual image generator. Internally used.
@@ -33,17 +46,33 @@ namespace CaptchaGen.NetCore
         /// <param name="fontSize">Font size to be used</param>
         /// <param name="distortion">Distortion required</param>
         /// <returns>Generated jpeg image as a MemoryStream object</returns>
-        public static MemoryStream BuildImage(string captchaCode, int imageHeight, int imageWidth, int fontSize, int distortion=18,
-            ImageFormatType imgType= ImageFormatType.Png)
+        public static MemoryStream BuildImage(string captchaCode, int imageHeight, int imageWidth,
+            int fontSize, int distortion = 18,
+            ImageFormatType imgType = ImageFormatType.Png)
         {
             int newX, newY;
+            Random random = new Random();
             MemoryStream memoryStream = new MemoryStream();
-            using (Bitmap captchaImage = new Bitmap(imageWidth, imageHeight, System.Drawing.Imaging.PixelFormat.Format64bppArgb))
-            using (Bitmap cache = new Bitmap(imageWidth, imageHeight, System.Drawing.Imaging.PixelFormat.Format64bppArgb))
-            using (Graphics graphicsTextHolder = Graphics.FromImage(captchaImage))
+            using (Bitmap captchaImage = new Bitmap(imageWidth, imageHeight, 
+                System.Drawing.Imaging.PixelFormat.Format64bppArgb))
+            using (Bitmap cache = new Bitmap(imageWidth, imageHeight, 
+                System.Drawing.Imaging.PixelFormat.Format64bppArgb))
+            using (Graphics g = Graphics.FromImage(captchaImage))
+            using(Font txtFont = new Font(FONTFAMILY, fontSize, FontStyle.Italic))
             {
-                graphicsTextHolder.Clear(BackgroundColor);
-                graphicsTextHolder.DrawString(captchaCode, new Font(FONTFAMILY, fontSize, FontStyle.Italic), new SolidBrush(Color.Gray), new PointF(8.4F, 20.4F));
+                g.Clear(BackgroundColor);
+                g.DrawString(captchaCode, txtFont, Brushes.Gray, new PointF(0, 0));
+
+                //Draw interfering lines
+                for(int i=0;i<8;i++)
+                {
+                    int startX = random.Next(imageWidth);
+                    int startY = random.Next(imageHeight);
+                    int endX = random.Next(imageWidth);
+                    int endY = random.Next(imageHeight);
+
+                    g.DrawLine(Pens.Gray, startX, startY, endX, endY);
+                }
 
                 //Distort the image with a wave function
                 for (int y = 0; y < imageHeight; y++)
@@ -78,7 +107,7 @@ namespace CaptchaGen.NetCore
                 cache.Save(memoryStream, imgFormat);
                 memoryStream.Position = 0;
                 return memoryStream;
-            }            
+            }
         }
     }
 }

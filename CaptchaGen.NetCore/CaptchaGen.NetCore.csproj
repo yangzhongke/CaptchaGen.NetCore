@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.3</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <Authors>yangzhongke(http://www.rupeng.com)</Authors>
     <Company>Rupeng.com</Company>
     <Description>Captcha generator for .net core migration from CaptchaGen by yangzhongke from rupeng.com
@@ -10,23 +10,19 @@ Nuget Install:
 
 Install-Package CaptchaGen.NetCore
 Example Code:
-
-    ImageFactory.Distortion = 10;
+    string code = ImageFactory.CreateCode(5);
     using (FileStream fs = File.OpenWrite("d:/1.jpg"))
-    using (Stream picStream = ImageFactory.GenerateImage("AB123", 50, 100, 20))
+    using (Stream picStream = ImageFactory.BuildImage(code, 50, 100, 20,10, ImageFormatType.Jpeg))
     {
-	    picStream.CopyTo(fs);
-    }
-Also be careful when using the library cross-platform, to include the runtime.osx.10.10-x64.CoreCompat.System.Drawing and / or runtime.linux-x64.CoreCompat.System.Drawing packages.
-
-Nuget: CoreCompat.System.Drawing, runtime.osx.10.10-x64.CoreCompat.System.Drawing, and runtime.linux-x64.CoreCompat.System.Drawing</Description>
+	picStream.CopyTo(fs);
+    }</Description>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/yangzhongke/CaptchaGen.NetCore</PackageProjectUrl>
-    <Version>1.0.2</Version>
+    <Version>1.1.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CoreCompat.System.Drawing" Version="1.0.0-beta006" />
+    <PackageReference Include="System.Drawing.Common" Version="4.7.0" />
   </ItemGroup>
 
 </Project>
