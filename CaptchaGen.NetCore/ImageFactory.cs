@@ -54,9 +54,9 @@ namespace CaptchaGen.NetCore
             Random random = new Random();
             MemoryStream memoryStream = new MemoryStream();
             using (Bitmap captchaImage = new Bitmap(imageWidth, imageHeight, 
-                System.Drawing.Imaging.PixelFormat.Format64bppArgb))
+                System.Drawing.Imaging.PixelFormat.Format32bppArgb))
             using (Bitmap cache = new Bitmap(imageWidth, imageHeight, 
-                System.Drawing.Imaging.PixelFormat.Format64bppArgb))
+                System.Drawing.Imaging.PixelFormat.Format32bppArgb))
             using (Graphics g = Graphics.FromImage(captchaImage))
             using(Font txtFont = new Font(FONTFAMILY, fontSize, FontStyle.Italic))
             {
