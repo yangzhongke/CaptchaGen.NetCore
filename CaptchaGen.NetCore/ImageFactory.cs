@@ -46,17 +46,18 @@ namespace CaptchaGen.NetCore
         /// <param name="imageWidth">Width of the image to be generated</param>
         /// <param name="fontSize">Font size to be used</param>
         /// <param name="distortion">Distortion required</param>
+        /// <param name="imgFormat">Image format of output image</param>
         /// <returns>Generated jpeg image as a MemoryStream object</returns>
         public static MemoryStream BuildImage(string captchaCode, int imageHeight, int imageWidth,
-            int fontSize, int distortion = 18)
+            int fontSize, int distortion = 18, ImageFormat imgFormat=null)
         {
             int newX, newY;
             Random random = new Random();
             MemoryStream memoryStream = new MemoryStream();
-            using (Bitmap captchaImage = new Bitmap(imageWidth, imageHeight, 
-                System.Drawing.Imaging.PixelFormat.Format64bppArgb))
-            using (Bitmap cache = new Bitmap(imageWidth, imageHeight, 
-                System.Drawing.Imaging.PixelFormat.Format64bppArgb))
+            using (Bitmap captchaImage = new Bitmap(imageWidth, imageHeight,
+                PixelFormat.Format64bppArgb))
+            using (Bitmap cache = new Bitmap(imageWidth, imageHeight,
+                PixelFormat.Format64bppArgb))
             using (Graphics g = Graphics.FromImage(captchaImage))
             using(Font txtFont = new Font(FONTFAMILY, fontSize, FontStyle.Italic))
             {
@@ -86,7 +87,10 @@ namespace CaptchaGen.NetCore
                         cache.SetPixel(x, y, captchaImage.GetPixel(newX, newY));
                     }
                 }
-                ImageFormat imgFormat = ImageFormat.Jpeg;
+                if(imgFormat==null)
+                {
+                    imgFormat = ImageFormat.Jpeg;
+                }
                 cache.Save(memoryStream, imgFormat);
                 memoryStream.Position = 0;
                 return memoryStream;
